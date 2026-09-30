@@ -1,0 +1,36 @@
+name: Flutter
+
+# Copied to feedoback/feedoback-sdks by scripts/release/mirror-sdks.sh and run
+# there, where Actions is free. Edit it in the repository the SDKs come from,
+# never in the mirror.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "feedoback_flutter/**"
+      - ".github/workflows/flutter.yml"
+  pull_request:
+    paths:
+      - "feedoback_flutter/**"
+      - ".github/workflows/flutter.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Pinned, not "stable": analysis rules and lints change between
+      # releases, and a moving SDK is a moving test result.
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.3
+          cache: true
+
+      - run: feedoback_flutter/ci.sh
