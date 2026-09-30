@@ -1,0 +1,18 @@
+node_modules
+lib
+coverage
+*.tgz
+
+# React Native build output, if the example is built in place
+ios/build
+android/build
+android/.gradle
+
+# A stray sqlite file, if a command is ever run from the wrong directory
+*.db
+
+# The example's pods. A lockfile earns its keep on something that ships; this
+# is a demo whose Podfile points at the sources next to it, so it only ever
+# produces churn.
+example/ios/Podfile.lock
+example/ios/Pods/

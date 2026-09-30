@@ -1,0 +1,53 @@
+// The React Native side of the Android SDK.
+//
+// Thin on purpose: com.feedoback:feedoback-android is the SDK, resolved by
+// coordinate rather than by path because that is what a customer's build
+// resolves. Everything here is the bridge between a ReadableMap and it.
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath "com.android.tools.build:gradle:8.7.3"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21"
+  }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "org.jetbrains.kotlin.android"
+// Generates NativeFeedobackSpec and the redact view's delegate from the
+// TypeScript in src/spec. Nothing in this module is hand-written twice.
+apply plugin: "com.facebook.react"
+
+android {
+  namespace "com.feedoback.reactnative"
+  compileSdk 35
+
+  defaultConfig {
+    // The SDK's own floor. A React Native app that supports less than this
+    // already cannot take the dependency.
+    minSdk 24
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+}
+
+repositories {
+  google()
+  mavenCentral()
+}
+
+dependencies {
+  // The version comes from the app: React Native aligns it, and pinning one
+  // here is how a library breaks on the next release.
+  implementation "com.facebook.react:react-android"
+  implementation "com.feedoback:feedoback-android:0.1.0"
+}

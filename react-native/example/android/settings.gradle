@@ -1,0 +1,19 @@
+pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+// The Feedoback Android SDK is not on Maven Central yet, so this example
+// resolves it from the local repository that `gradle :feedoback:publishToMavenLocal`
+// writes. A customer's build finds it on Maven Central and needs none of this.
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        maven { url("$rootDir/../node_modules/react-native/android") }
+    }
+}
+
+rootProject.name = 'FeedobackExample'
+include ':app'
+includeBuild('../node_modules/@react-native/gradle-plugin')

@@ -1,0 +1,33 @@
+name: feedoback_flutter
+description: "Flutter SDK for Feedoback. A native feedback sheet from a control your app already owns, or a floating launcher over it."
+version: 0.1.0
+homepage: https://feedoback.com
+repository: https://github.com/feedoback/feedoback-sdks/tree/main/feedoback_flutter
+issue_tracker: https://github.com/feedoback/feedoback-sdks/issues
+topics:
+  - feedback
+  - bug-report
+
+environment:
+  sdk: ^3.13.3
+  flutter: '>=3.3.0'
+
+# No third-party dependencies, deliberately: this ships inside someone else's
+# app, and every package added here is one their build has to resolve.
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.feedoback.feedoback_flutter
+        pluginClass: FeedobackFlutterPlugin
+      ios:
+        pluginClass: FeedobackFlutterPlugin
