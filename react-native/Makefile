@@ -5,7 +5,7 @@
 # uses the credentials in your environment — run `npm login` once beforehand.
 
 .PHONY: install build typecheck test check clean \
-        release-patch release-minor release-major publish
+        release release-dry-run
 
 install: ## Install dependencies
 	npm install
@@ -24,20 +24,8 @@ check: typecheck test ## Everything that must pass before a release
 clean: ## Remove build output
 	rm -rf lib android/build android/.gradle
 
-release-patch: check ## Bug fixes: 0.1.0 -> 0.1.1
-	npm version patch
-	$(MAKE) publish
-	git push --follow-tags
+release: ## Publish the version package.json and CHANGELOG.md name, through every gate
+	../../scripts/release/react-native.sh $$(node -p "require('./package.json').version")
 
-release-minor: check ## New features, backwards compatible: 0.1.0 -> 0.2.0
-	npm version minor
-	$(MAKE) publish
-	git push --follow-tags
-
-release-major: check ## Breaking changes: 0.1.0 -> 1.0.0
-	npm version major
-	$(MAKE) publish
-	git push --follow-tags
-
-publish: ## Publish the current version to npm (public)
-	npm publish --access public
+release-dry-run: ## Every check and gate, stopping before anything is published
+	DRY_RUN=1 ../../scripts/release/react-native.sh $$(node -p "require('./package.json').version")
