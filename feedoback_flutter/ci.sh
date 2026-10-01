@@ -14,6 +14,12 @@ if [ "$PUBSPEC" != "$LOG" ]; then
 fi
 echo "$PUBSPEC"
 
+step "Licence"
+# pub.dev refuses a LICENSE that still holds the template's TODO, and only
+# says so on upload, after everything else here has passed.
+grep -q "^MIT License$" LICENSE || { echo "LICENSE is not the MIT licence." >&2; exit 1; }
+echo "MIT"
+
 step "Dependencies"
 flutter pub get
 
