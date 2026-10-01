@@ -25,13 +25,20 @@ npm test
 
 step "Build"
 rm -rf lib
-npm run build
+# bob reports a package.json that describes its output wrongly as a warning and
+# carries on; the release would ship it all the same.
+BUILD=$(npm run build 2>&1) || { echo "$BUILD"; exit 1; }
+echo "$BUILD"
+if grep -q "⚠" <<<"$BUILD"; then
+  echo "The build warned; fix package.json before releasing." >&2
+  exit 1
+fi
 
 step "What npm receives"
 # Read from the tarball rather than trusted from `files`: tests and build
 # output have both leaked into it before.
 CONTENTS=$(npm pack --dry-run --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s)[0].files.map(f=>f.path).join("\n")))')
-for path in lib/commonjs/index.js lib/module/index.js lib/typescript/index.d.ts FeedobackReactNative.podspec CHANGELOG.md LICENSE; do
+for path in lib/commonjs/index.js lib/module/index.js lib/typescript/commonjs/index.d.ts lib/typescript/module/index.d.ts FeedobackReactNative.podspec CHANGELOG.md LICENSE; do
   grep -qx "$path" <<<"$CONTENTS" || { echo "The tarball has no $path" >&2; exit 1; }
 done
 if grep -E '\.test\.|^android/build/|^android/\.gradle/' <<<"$CONTENTS"; then
